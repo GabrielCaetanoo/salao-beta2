@@ -1,0 +1,29 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")  // Configure no .env
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  telefone  String   @unique
+  email     String?  @unique
+  agendamentos Agendamento[]
+  createdAt DateTime @default(now())
+}
+
+model Agendamento {
+  id        Int      @id @default(autoincrement())
+  servico   String   // Ex: "Corte de cabelo", "Barba"
+  horario   DateTime // Data e hora do agendamento
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  status    String   @default("pendente") // "pendente", "confirmado", "cancelado"
+  createdAt DateTime @default(now())
+}
+
+model Bloqueio {
+  id      Int      @id @default(autoincrement())
+  horario DateTime
+  motivo  String?
+}

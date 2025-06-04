@@ -1,40 +1,113 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+Here's a comprehensive `README.md` for your **Salão Beta** project, structured to showcase your work professionally:
 
-## Getting Started
+```markdown
+# 🧖‍♀️ Salão Beta - Sistema de Agendamento
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-13.5%2B-black?logo=next.js)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-%2338B2AC?logo=tailwind-css)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Sistema completo para gestão de agendamentos em salões de beleza, com painel administrativo e interface cliente.
+
+## ✨ Funcionalidades
+
+- **Autenticação segura** com NextAuth.js
+- **Agendamento intuitivo** de serviços
+- **Painel administrativo** com visualização de reservas
+- **Bloqueio de horários** indisponíveis
+- **Notificações em tempo real** (react-hot-toast)
+
+## 🛠 Tecnologias
+
+| Camada          | Tecnologias                                                                 |
+|-----------------|----------------------------------------------------------------------------|
+| Frontend        | Next.js 13, Tailwind CSS v4+, react-hook-form, react-datepicker            |
+| Backend         | Next.js API Routes, Prisma ORM                                             |
+| Banco de Dados  | PostgreSQL (produção) / SQLite (desenvolvimento)                           |
+| Autenticação    | NextAuth.js com estratégia credentials                                     |
+| Deploy          | Vercel (recomendado)                                                      |
+
+## 🚀 Instalação
+
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/salao-beta.git
+   ```
+
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+
+3. Configure o ambiente:
+   ```bash
+   cp .env.example .env
+   # Preencha as variáveis no .env
+   ```
+
+4. Inicie o banco de dados:
+   ```bash
+   npx prisma migrate dev --name init
+   ```
+
+5. Execute o projeto:
+   ```bash
+   npm run dev
+   ```
+
+## 📂 Estrutura do Projeto
+
+```
+salao-beta/
+├── prisma/
+│   └── schema.prisma       # Modelos do banco de dados
+├── pages/
+│   ├── api/                # Endpoints da API
+│   ├── agendamento.tsx     # Página de agendamento
+│   ├── login.tsx           # Página de login
+│   └── painel/             # Painel administrativo
+├── styles/
+│   └── globals.css         # Estilos globais (Tailwind v4+)
+└── utils/
+    └── prisma.ts           # Configuração do Prisma Client
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌟 Destaques Técnicos
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- **Arquitetura modular** com separação clara de concerns
+- **Tipagem estática** com TypeScript
+- **Design responsivo** mobile-first
+- **Gerenciamento de estado** eficiente
+- **Segurança** com validação em todas as camadas
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## 📝 Roadmap
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+- [ ] Integração com WhatsApp API
+- [ ] Calendário visual interativo
+- [ ] Sistema de fidelidade
+- [ ] Relatórios financeiros
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🤝 Como Contribuir
 
-## Learn More
+1. Faça um fork do projeto
+2. Crie uma branch (`git checkout -b feature/nova-feature`)
+3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`)
+4. Push para a branch (`git push origin feature/nova-feature`)
+5. Abra um Pull Request
 
-To learn more about Next.js, take a look at the following resources:
+## 📄 Licença
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+MIT License - Consulte o arquivo [LICENSE](LICENSE) para detalhes.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+> **Preview do sistema:**  
+> ![Captura de Tela](/public/screenshot.png) *(adicione uma imagem real posteriormente)*
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Recursos opcionais para adicionar:
+1. **Badges extras** no topo (coverage, license)
+2. **GIF de demonstração** no lugar da screenshot
+3. **Seção de FAQ** com problemas comuns
+4. **Variáveis de ambiente** detalhadas
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+Quer que eu adapte alguma seção específica para seu caso de uso? 😊

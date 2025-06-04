@@ -1,5 +1,3 @@
-Here's a comprehensive `README.md` for your **Salão Beta** project, structured to showcase your work professionally:
-
 ```markdown
 # 🧖‍♀️ Salão Beta - Sistema de Agendamento
 
@@ -110,4 +108,3 @@ MIT License - Consulte o arquivo [LICENSE](LICENSE) para detalhes.
 3. **Seção de FAQ** com problemas comuns
 4. **Variáveis de ambiente** detalhadas
 
-Quer que eu adapte alguma seção específica para seu caso de uso? 😊

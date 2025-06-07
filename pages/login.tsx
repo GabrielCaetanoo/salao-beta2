@@ -8,20 +8,22 @@ export default function Login() {
   const [name, setName] = useState('');
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Simula login (substitua por sua lógica real)
-    const result = await signIn('credentials', {
-      redirect: false,
-      phone,
-      name,
-    });
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  
+  const result = await signIn('credentials', {
+    phone: '11999999999', // Substitua pelos dados do form
+    name: 'Cliente Teste',
+    redirect: false
+  });
 
-    if (result?.ok) {
-      router.push('/agendamento'); // Redireciona após login
-    }
-  };
+  if (result?.error) {
+    console.error('Erro:', result.error);
+    // Mostre o erro para o usuário
+  } else {
+    router.push('/agendamento');
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

@@ -11,16 +11,26 @@ export default function Login() {
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   
+  // 1. Log para confirmar que os dados do formulário estão sendo lidos
+  console.log(`Tentando login com Nome: ${name}, Telefone: ${phone}`);
+
+  // 2. Chame o signIn com as variáveis de estado 'name' e 'phone'
   const result = await signIn('credentials', {
-    phone: '11999999999', // Substitua pelos dados do form
-    name: 'Cliente Teste',
+    phone: phone, // CORRIGIDO
+    name: name,   // CORRIGIDO
     redirect: false
   });
 
+  // 3. Log para ver o resultado da autenticação
+  console.log("Resultado retornado pelo signIn:", result);
+
   if (result?.error) {
-    console.error('Erro:', result.error);
-    // Mostre o erro para o usuário
-  } else {
+    console.error('Ocorreu um erro ao fazer login:', result.error);
+    // O ideal é mostrar um erro para o usuário aqui
+    alert(`Erro no login: ${result.error}`); 
+  } else if (result?.ok) {
+    // 4. Se deu tudo certo (result.ok é true), redirecione
+    console.log("Login bem-sucedido, redirecionando para /agendamento...");
     router.push('/agendamento');
   }
 };

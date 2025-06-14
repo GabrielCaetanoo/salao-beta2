@@ -1,61 +1,72 @@
-import NextAuth from 'next-auth';
+import NextAuth, { User } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import prisma from '../../../utils/prisma';
 
-// Define uma interface local para o usuário que corresponde ao seu schema do Prisma
-interface CustomUser {
-  id: string; // O authorize do NextAuth espera que o id seja uma string
-  phone: string;
-  nome: string;
+// Para adicionar propriedades personalizadas à sessão e ao token com segurança de tipos,
+// estendemos (augment) os tipos padrão do NextAuth.
+// Idealmente, isso ficaria em um arquivo separado, como `types/next-auth.d.ts`.
+
+declare module "next-auth/jwt" {
+  /** Estende o tipo JWT padrão com nossas propriedades de usuário. */
+  interface JWT {
+    user?: {
+      id: string;
+      phone: string;
+      nome: string;
+    }
+  }
 }
+
+declare module "next-auth" {
+  /** Estende o tipo User padrão. */
+  interface User {
+    id: string;
+    phone: string;
+    nome: string;
+  }
+  
+  /** Estende o tipo Session padrão para incluir nosso objeto de usuário personalizado. */
+  interface Session {
+    user: User; // O objeto `user` da sessão agora terá nossas propriedades personalizadas.
+  }
+}
+
 
 export default NextAuth({
   providers: [
     CredentialsProvider({
-      // O nome interno do provedor.
       id: 'credentials',
-      // O nome que será mostrado na tela de login (se houver uma tela automática).
       name: 'Credentials', 
-      
-      // Define os campos que o formulário de login deve esperar.
       credentials: {
         phone: { label: "Telefone", type: "text" },
-        // A propriedade aqui deve ser 'name' para corresponder ao que o signIn envia,
-        // mas podemos renomeá-la para 'nome' no objeto `credentials` dentro de authorize.
         name: { label: "Nome", type: "text" }
       },
       
-      async authorize(credentials): Promise<CustomUser | null> {
-        // A função `authorize` é onde a sua lógica de verificação acontece.
+      async authorize(credentials): Promise<User | null> {
+        // Agora, esta função retorna o tipo `User` que estendemos.
         try {
           if (!credentials?.phone || !credentials?.name) {
             throw new Error('Nome e telefone são obrigatórios');
           }
 
-          // Usa 'upsert': cria um novo usuário se não existir, ou apenas o encontra se já existir.
-          const user = await prisma.user.upsert({
+          const userFromDb = await prisma.user.upsert({
             where: { telefone: credentials.phone },
-            // Dados para criar um novo usuário.
             create: { 
               telefone: credentials.phone,
-              // Usa o 'name' vindo das credenciais.
               nome: credentials.name,
             },
-            // Se o usuário já existe, não fazemos nenhuma atualização nos dados dele.
             update: {}
           });
 
-          // Retorna o objeto do usuário no formato esperado.
-          // O id é convertido para string, pois é o que o NextAuth espera.
+          // O objeto retornado aqui é passado para o parâmetro `user` do callback `jwt`.
           return {
-            id: user.id.toString(),
-            phone: user.telefone,
-            nome: user.nome
+            id: userFromDb.id.toString(),
+            phone: userFromDb.telefone,
+            nome: userFromDb.nome
           };
 
         } catch (error) {
           console.error('Erro na autenticação:', error);
-          // Retorna null se a autenticação falhar.
           return null;
         }
       }
@@ -63,25 +74,25 @@ export default NextAuth({
   ],
   pages: {
     signIn: '/login',
-    error: '/login' // Redireciona para /login em caso de erro, pode passar query params se quiser
+    error: '/login'
   },
   callbacks: {
-    // O callback 'jwt' é chamado sempre que um JSON Web Token é criado ou atualizado.
+    // Este callback é chamado sempre que um JWT é criado (no login).
+    // O parâmetro `user` só está disponível no primeiro login.
     async jwt({ token, user }) {
-      // Se o objeto 'user' (vindo do authorize) existe, estamos no primeiro login.
-      // Adicionamos os dados do usuário ao token.
       if (user) {
+        // `user` é o objeto que retornamos do `authorize`.
+        // Persistimos os dados do usuário no token.
         token.user = user;
       }
       return token;
     },
-    // O callback 'session' é chamado sempre que uma sessão é acessada.
+    // Este callback é chamado sempre que uma sessão é acessada.
     async session({ session, token }) {
-      // Adiciona os dados do usuário do token para o objeto da sessão,
-      // tornando-os disponíveis no lado do cliente.
-      if (token && token.user) {
-        // @ts-expect-error: Permite adicionar propriedades customizadas ao objeto da sessão.
-        session.user = token.user;
+      // O token agora contém nossos dados personalizados.
+      // Nós os passamos para o objeto da sessão para que fiquem disponíveis no lado do cliente.
+      if (token.user) {
+        session.user = token.user; // Sem 'as any' ou erros de tipo!
       }
       return session;
     }
